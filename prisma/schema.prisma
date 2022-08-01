@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model Comments {
+  IdComments    Int      @id(map: "PK__Comments__0B5B73B173960065") @default(autoincrement())
+  TextComment   String   @db.VarChar(Max)
+  cveUser2      Int
+  FechaComments DateTime @db.DateTime
+  cvePost       Int
+  ImagePost     Bytes    @db.VarBinary(1)
+  Posts         Posts    @relation(fields: [cvePost], references: [IdArticulos], onDelete: Cascade, onUpdate: NoAction, map: "FK__Comments__cvePos__68D28DBC")
+  Usuarios      Usuarios @relation(fields: [cveUser2], references: [IdUsuario], onUpdate: NoAction, map: "FK__Comments__cveUse__67DE6983")
+}
+
+model Likes {
+  IdLike      Int      @id(map: "PK__Likes__31D8CE91FF7F84EB") @default(autoincrement())
+  cveUser3    Int
+  cvePost2    Int
+  FechaLike   DateTime @db.DateTime
+  cveTypeLike Int
+  Posts       Posts    @relation(fields: [cvePost2], references: [IdArticulos], onDelete: Cascade, onUpdate: NoAction, map: "FK__Likes__cvePost2__640DD89F")
+  Usuarios    Usuarios @relation(fields: [cveUser3], references: [IdUsuario], onUpdate: NoAction, map: "FK__Likes__cveTypeLi__6319B466")
+  TypeLike    TypeLike @relation(fields: [cveTypeLike], references: [IdTypeLike], onUpdate: NoAction, map: "FK__Likes__cveTypeLi__6501FCD8")
+}
+
+model Posts {
+  IdArticulos        Int              @id(map: "PK__Posts__A1E94775D22C7200") @default(autoincrement())
+  cveUser            Int
+  FechaDePublicacion DateTime         @db.DateTime
+  TitlePost          String?          @db.VarChar(50)
+  cveTypePublicacion Int
+  TextPost           String           @db.VarChar(Max)
+  idPostCompartido   Int?
+  Type_Publicacion   Type_Publicacion @relation(fields: [cveTypePublicacion], references: [IdTypePost], onUpdate: NoAction, map: "FK__Posts__cveTypePu__5F492382")
+  Usuarios           Usuarios         @relation(fields: [cveUser], references: [IdUsuario], onUpdate: NoAction, map: "FK__Posts__cveUser__5E54FF49")
+  Posts              Posts?           @relation("PostsToPosts", fields: [idPostCompartido], references: [IdArticulos], onDelete: NoAction, onUpdate: NoAction, map: "FK__Posts__idPostCom__603D47BB")
+  Comments           Comments[]
+  Likes              Likes[]
+  other_Posts        Posts[]          @relation("PostsToPosts")
+}
+
+model Programming_Languages {
+  IdLanguage       Int                @id(map: "PK__Programm__1656D917AB15555C") @default(autoincrement())
+  NomLanguage      String             @db.VarChar(50)
+  Type_Publicacion Type_Publicacion[]
+
+  @@map("Programming Languages")
+}
+
+model Type_Publicacion {
+  IdTypePost            Int                   @id(map: "PK__Type Pub__618217D3FDD35D4A") @default(autoincrement())
+  NomTypePost           String                @db.VarChar(50)
+  cveLanguage           Int
+  Programming_Languages Programming_Languages @relation(fields: [cveLanguage], references: [IdLanguage], onUpdate: NoAction, map: "FK__Type Publ__cveLa__54CB950F")
+  Posts                 Posts[]
+
+  @@map("Type Publicacion")
+}
+
+model TypeLike {
+  IdTypeLike    Int     @id(map: "PK__TypeLike__33E7F8CB932817A7") @default(autoincrement())
+  NomTypeLike   String  @db.VarChar(50)
+  IconoTypeLike Bytes   @db.VarBinary(1)
+  Likes         Likes[]
+}
+
+model Usuarios {
+  IdUsuario       Int        @id(map: "PK__Usuarios__5B65BF9744550B64") @default(autoincrement())
+  NomUsuario      String     @unique(map: "UQ__Usuarios__ABCBEB3EC14BD07B") @db.VarChar(100)
+  CorreoUsuario   String     @db.VarChar(100)
+  PasswordUsuario String     @db.VarChar(50)
+  FechaAgregacion DateTime   @db.DateTime
+  Comments        Comments[]
+  Likes           Likes[]
+  Posts           Posts[]
+}
