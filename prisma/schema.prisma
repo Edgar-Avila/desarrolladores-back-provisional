@@ -7,76 +7,72 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Comments {
-  IdComments    Int      @id(map: "PK__Comments__0B5B73B173960065") @default(autoincrement())
-  TextComment   String   @db.VarChar(Max)
-  cveUser2      Int
-  FechaComments DateTime @db.DateTime
-  cvePost       Int
-  ImagePost     Bytes    @db.VarBinary(1)
-  Posts         Posts    @relation(fields: [cvePost], references: [IdArticulos], onDelete: Cascade, onUpdate: NoAction, map: "FK__Comments__cvePos__68D28DBC")
-  Usuarios      Usuarios @relation(fields: [cveUser2], references: [IdUsuario], onUpdate: NoAction, map: "FK__Comments__cveUse__67DE6983")
+model Comment {
+  CommentId   Int      @id(map: "PK__Comment__C3B4DFCA29C789AF") @default(autoincrement())
+  Content     String   @db.VarChar(Max)
+  CreatedDate DateTime @db.DateTime
+  PostedImage Bytes    @db.VarBinary(1)
+  UserID      Int
+  PostID      Int
+  Post        Post     @relation(fields: [PostID], references: [PostID], onDelete: Cascade, onUpdate: NoAction, map: "FK__Comment__PostID__4CA06362")
+  User        User     @relation(fields: [UserID], references: [UserID], onUpdate: NoAction, map: "FK__Comment__UserID__4BAC3F29")
 }
 
-model Likes {
-  IdLike      Int      @id(map: "PK__Likes__31D8CE91FF7F84EB") @default(autoincrement())
-  cveUser3    Int
-  cvePost2    Int
-  FechaLike   DateTime @db.DateTime
-  cveTypeLike Int
-  Posts       Posts    @relation(fields: [cvePost2], references: [IdArticulos], onDelete: Cascade, onUpdate: NoAction, map: "FK__Likes__cvePost2__640DD89F")
-  Usuarios    Usuarios @relation(fields: [cveUser3], references: [IdUsuario], onUpdate: NoAction, map: "FK__Likes__cveTypeLi__6319B466")
-  TypeLike    TypeLike @relation(fields: [cveTypeLike], references: [IdTypeLike], onUpdate: NoAction, map: "FK__Likes__cveTypeLi__6501FCD8")
+model Post {
+  PostID          Int        @id(map: "PK__Post__AA126038496CA38B") @default(autoincrement())
+  PublicationDate DateTime   @db.DateTime
+  Title           String?    @db.VarChar(50)
+  Content         String     @db.VarChar(Max)
+  UserID          Int
+  PostTypeID      Int
+  SharedPostID    Int?
+  PostType        PostType   @relation(fields: [PostTypeID], references: [PostTypeID], onUpdate: NoAction, map: "FK__Post__PostTypeID__4316F928")
+  Post            Post?      @relation("PostToPost", fields: [SharedPostID], references: [PostID], onDelete: NoAction, onUpdate: NoAction, map: "FK__Post__SharedPost__440B1D61")
+  User            User       @relation(fields: [UserID], references: [UserID], onUpdate: NoAction, map: "FK__Post__UserID__4222D4EF")
+  Comment         Comment[]
+  other_Post      Post[]     @relation("PostToPost")
+  Reaction        Reaction[]
 }
 
-model Posts {
-  IdArticulos        Int              @id(map: "PK__Posts__A1E94775D22C7200") @default(autoincrement())
-  cveUser            Int
-  FechaDePublicacion DateTime         @db.DateTime
-  TitlePost          String?          @db.VarChar(50)
-  cveTypePublicacion Int
-  TextPost           String           @db.VarChar(Max)
-  idPostCompartido   Int?
-  Type_Publicacion   Type_Publicacion @relation(fields: [cveTypePublicacion], references: [IdTypePost], onUpdate: NoAction, map: "FK__Posts__cveTypePu__5F492382")
-  Usuarios           Usuarios         @relation(fields: [cveUser], references: [IdUsuario], onUpdate: NoAction, map: "FK__Posts__cveUser__5E54FF49")
-  Posts              Posts?           @relation("PostsToPosts", fields: [idPostCompartido], references: [IdArticulos], onDelete: NoAction, onUpdate: NoAction, map: "FK__Posts__idPostCom__603D47BB")
-  Comments           Comments[]
-  Likes              Likes[]
-  other_Posts        Posts[]          @relation("PostsToPosts")
+model PostType {
+  PostTypeID          Int                 @id(map: "PK__PostType__AB212610D52DA5EA") @default(autoincrement())
+  Name                String              @db.VarChar(50)
+  LanguageID          Int
+  ProgrammingLanguage ProgrammingLanguage @relation(fields: [LanguageID], references: [LanguageID], onUpdate: NoAction, map: "FK__PostType__Langua__38996AB5")
+  Post                Post[]
 }
 
-model Programming_Languages {
-  IdLanguage       Int                @id(map: "PK__Programm__1656D917AB15555C") @default(autoincrement())
-  NomLanguage      String             @db.VarChar(50)
-  Type_Publicacion Type_Publicacion[]
-
-  @@map("Programming Languages")
+model ProgrammingLanguage {
+  LanguageID Int        @id(map: "PK__Programm__B938558B0CE74088") @default(autoincrement())
+  Name       String     @db.VarChar(50)
+  PostType   PostType[]
 }
 
-model Type_Publicacion {
-  IdTypePost            Int                   @id(map: "PK__Type Pub__618217D3FDD35D4A") @default(autoincrement())
-  NomTypePost           String                @db.VarChar(50)
-  cveLanguage           Int
-  Programming_Languages Programming_Languages @relation(fields: [cveLanguage], references: [IdLanguage], onUpdate: NoAction, map: "FK__Type Publ__cveLa__54CB950F")
-  Posts                 Posts[]
-
-  @@map("Type Publicacion")
+model Reaction {
+  ReactionID     Int          @id(map: "PK__Reaction__46DDF9D4007B34C0") @default(autoincrement())
+  CreatedDate    DateTime     @db.DateTime
+  UserID         Int
+  PostID         Int
+  ReactionTypeID Int
+  Post           Post         @relation(fields: [PostID], references: [PostID], onDelete: Cascade, onUpdate: NoAction, map: "FK__Reaction__PostID__47DBAE45")
+  User           User         @relation(fields: [UserID], references: [UserID], onUpdate: NoAction, map: "FK__Reaction__Reacti__46E78A0C")
+  ReactionType   ReactionType @relation(fields: [ReactionTypeID], references: [ReactionTypeID], onUpdate: NoAction, map: "FK__Reaction__Reacti__48CFD27E")
 }
 
-model TypeLike {
-  IdTypeLike    Int     @id(map: "PK__TypeLike__33E7F8CB932817A7") @default(autoincrement())
-  NomTypeLike   String  @db.VarChar(50)
-  IconoTypeLike Bytes   @db.VarBinary(1)
-  Likes         Likes[]
+model ReactionType {
+  ReactionTypeID Int        @id(map: "PK__Reaction__01E625C0F4C029F6") @default(autoincrement())
+  Name           String     @db.VarChar(50)
+  Icon           Bytes      @db.VarBinary(1)
+  Reaction       Reaction[]
 }
 
-model Usuarios {
-  IdUsuario       Int        @id(map: "PK__Usuarios__5B65BF9744550B64") @default(autoincrement())
-  NomUsuario      String     @unique(map: "UQ__Usuarios__ABCBEB3EC14BD07B") @db.VarChar(100)
-  CorreoUsuario   String     @db.VarChar(100)
-  PasswordUsuario String     @db.VarChar(50)
-  FechaAgregacion DateTime   @db.DateTime
-  Comments        Comments[]
-  Likes           Likes[]
-  Posts           Posts[]
+model User {
+  UserID      Int        @id(map: "PK__User__1788CCAC9927BD40") @default(autoincrement())
+  Username    String     @unique(map: "UQ__User__536C85E4E4324D35") @db.VarChar(100)
+  Email       String     @db.VarChar(100)
+  Password    String     @db.VarChar(50)
+  CreatedDate DateTime   @db.DateTime
+  Comment     Comment[]
+  Post        Post[]
+  Reaction    Reaction[]
 }

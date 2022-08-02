@@ -2,13 +2,13 @@ import { Request, Response } from "express";
 import db from "../db";
 
 export const createUser = async (req: Request, res: Response) => {
-    const {nombre, email, password} = req.body;
-    await db.usuarios.create({
+    const {username, email, password} = req.body;
+    await db.user.create({
         data: {
-            NomUsuario: nombre,
-            CorreoUsuario: email,
-            PasswordUsuario: password,
-            FechaAgregacion: new Date()
+            Username: username,
+            Email: email,
+            Password: password,
+            CreatedDate: new Date()
         }
     });
     res.json({
@@ -17,15 +17,15 @@ export const createUser = async (req: Request, res: Response) => {
 };
 
 export const getUsers = async (req: Request, res: Response) => {
-    const users = await db.usuarios.findMany();
+    const users = await db.user.findMany();
     res.json(users);
 };
 
 export const getUser = async (req: Request, res: Response) => {
     const id = parseInt(req.params['id']);
-    const user = await db.usuarios.findUnique({
+    const user = await db.user.findUnique({
         where: {
-            IdUsuario: id
+            UserID: id
         }
     });
     res.json(user);
@@ -33,15 +33,15 @@ export const getUser = async (req: Request, res: Response) => {
 
 export const updateUser = async (req: Request, res: Response) => {
     const id = parseInt(req.params['id']);
-    const {nombre, email, password} = req.body;
-    await db.usuarios.update({
+    const {username, email, password} = req.body;
+    await db.user.update({
         where:{
-            IdUsuario: id
+            UserID: id
         },
         data: {
-            NomUsuario: nombre,
-            CorreoUsuario: email,
-            PasswordUsuario: password,
+            Username: username,
+            Email: email,
+            Password: password,
         }
     });
     res.json({
@@ -51,9 +51,9 @@ export const updateUser = async (req: Request, res: Response) => {
 
 export const deleteUser = async (req: Request, res: Response) => {
     const id = parseInt(req.params['id']);
-    const user = await db.usuarios.delete({
+    await db.user.delete({
         where: {
-            IdUsuario: id
+            UserID: id
         }
     });
     res.json({

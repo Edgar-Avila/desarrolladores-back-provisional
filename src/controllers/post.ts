@@ -1,40 +1,35 @@
 import { Request, Response } from "express";
 import db from "../db";
 
-const getFields = (req: Request)=> {
-    const { idUsuario, titulo, idTipoPublicacion, texto, idPostCompartido}:
-    {idUsuario: number; titulo: string, idTipoPublicacion: number,
-     texto: string, idPostCompartido: number} = req.body;
-    return {
-        cveUser: idUsuario,
-        TitlePost: titulo,
-        cveTypePublicacion: idTipoPublicacion,
-        TextPost: texto,
-        idPostCompartido: idPostCompartido
-    };
-}
-
 export const createPost = async (req: Request, res: Response) => {
-    const data = {
-        ...getFields(req),
-        ...{FechaDePublicacion: new Date()}
-    };
-    await db.posts.create({ data });
+    const { userId, title, postTypeId, content, sharedPostId}:
+    {userId: number; title: string, postTypeId: number,
+     content: string, sharedPostId: number} = req.body;
+    await db.post.create({ 
+        data: {
+            UserID: userId,
+            Title: title,
+            PostTypeID: postTypeId,
+            Content: content,
+            SharedPostID: sharedPostId,
+            PublicationDate: new Date()
+        }
+    });
     res.json({
         message: 'OK'
     });
 };
 
 export const getPosts = async (req: Request, res: Response) => {
-    const posts = await db.posts.findMany();
+    const posts = await db.post.findMany();
     res.json(posts);
 };
 
 export const getPost = async (req: Request, res: Response) => {
     const id = parseInt(req.params['id']);
-    const post = await db.posts.findUnique({
+    const post = await db.post.findUnique({
         where: {
-            IdArticulos: id
+            PostID: id
         }
     });
     res.json(post);
@@ -42,12 +37,20 @@ export const getPost = async (req: Request, res: Response) => {
 
 export const updatePost = async (req: Request, res: Response) => {
     const id = parseInt(req.params['id']);
-    const data = getFields(req);
-    await db.posts.update({
+    const { userId, title, postTypeId, content, sharedPostId}:
+    {userId: number; title: string, postTypeId: number,
+     content: string, sharedPostId: number} = req.body;
+    await db.post.update({
         where:{
-            IdArticulos: id
+            PostID: id
         },
-        data
+        data:{
+            UserID: userId,
+            Title: title,
+            PostTypeID: postTypeId,
+            Content: content,
+            SharedPostID: sharedPostId,
+        }
     });
     res.json({
         message: 'OK'
@@ -56,9 +59,9 @@ export const updatePost = async (req: Request, res: Response) => {
 
 export const deletePost = async (req: Request, res: Response) => {
     const id = parseInt(req.params['id']);
-    await db.posts.delete({
+    await db.post.delete({
         where: {
-            IdArticulos: id
+            PostID: id
         }
     });
     res.json({

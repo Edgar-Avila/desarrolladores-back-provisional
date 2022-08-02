@@ -5,10 +5,10 @@ import { createProgrammingLanguage, deleteProgrammingLanguage, getProgrammingLan
 
 const router = Router();
 
-router.post('/ProgrammingLanguages', createProgrammingLanguage);
-router.get('/ProgrammingLanguages', getProgrammingLanguages);
-router.get('/ProgrammingLanguages/:id', getProgrammingLanguage);
-router.delete('/ProgrammingLanguages/:id', deleteProgrammingLanguage);
-router.put('/ProgrammingLanguages/:id', updateProgrammingLanguage);
+router.post('/programming-languages', createProgrammingLanguage);
+router.get('/programming-languages', getProgrammingLanguages);
+router.get('/programming-languages/:id', getProgrammingLanguage);
+router.delete('/programming-languages/:id', deleteProgrammingLanguage);
+router.put('/programming-languages/:id', updateProgrammingLanguage);
 
 export default(router);

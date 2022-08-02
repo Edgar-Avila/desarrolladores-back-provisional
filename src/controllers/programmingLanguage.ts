@@ -2,10 +2,10 @@ import { Request, Response } from "express";
 import db from "../db";
 
 export const createProgrammingLanguage = async (req: Request, res: Response) => {
-    const {nombre} = req.body;
-    await db.programming_Languages.create({
+    const {name} = req.body;
+    await db.programmingLanguage.create({
         data: {
-            'NomLanguage': nombre
+            Name: name
         }
     });
     res.json({
@@ -14,15 +14,15 @@ export const createProgrammingLanguage = async (req: Request, res: Response) => 
 };
 
 export const getProgrammingLanguages = async (req: Request, res: Response) => {
-    const programmingLanguages = await db.programming_Languages.findMany();
+    const programmingLanguages = await db.programmingLanguage.findMany();
     res.json(programmingLanguages);
 };
 
 export const getProgrammingLanguage = async (req: Request, res: Response) => {
     const id = parseInt(req.params['id']);
-    const programmingLanguages = await db.programming_Languages.findUnique({
+    const programmingLanguages = await db.programmingLanguage.findUnique({
         where: {
-            IdLanguage: id
+            LanguageID: id
         }
     });
     res.json(programmingLanguages);
@@ -30,13 +30,13 @@ export const getProgrammingLanguage = async (req: Request, res: Response) => {
 
 export const updateProgrammingLanguage = async (req: Request, res: Response) => {
     const id = parseInt(req.params['id']);
-    const {nombre} = req.body;
-    await db.programming_Languages.update({
+    const {name} = req.body;
+    await db.programmingLanguage.update({
         where:{
-            IdLanguage: id
+            LanguageID: id
         },
         data: {
-            NomLanguage: nombre,
+            Name: name,
         }
     });
     res.json({
@@ -46,9 +46,9 @@ export const updateProgrammingLanguage = async (req: Request, res: Response) => 
 
 export const deleteProgrammingLanguage = async (req: Request, res: Response) => {
     const id = parseInt(req.params['id']);
-    await db.programming_Languages.delete({
+    await db.programmingLanguage.delete({
         where: {
-            IdLanguage: id
+            LanguageID: id
         }
     });
     res.json({

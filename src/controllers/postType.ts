@@ -2,11 +2,11 @@ import { Request, Response } from "express";
 import db from "../db";
 
 export const createPostType = async (req: Request, res: Response) => {
-    const {nombre, idLenguaje}: {nombre: string; idLenguaje: number} = req.body;
-    await db.type_Publicacion.create({
+    const {name, languageId}: {name: string; languageId: number} = req.body;
+    await db.postType.create({
         data: {
-            NomTypePost: nombre,
-            cveLanguage: idLenguaje,
+            Name: name,
+            LanguageID: languageId,
         }
     });
     res.json({
@@ -15,15 +15,15 @@ export const createPostType = async (req: Request, res: Response) => {
 };
 
 export const getPostTypes = async (req: Request, res: Response) => {
-    const postTypes = await db.type_Publicacion.findMany();
+    const postTypes = await db.postType.findMany();
     res.json(postTypes);
 };
 
 export const getPostType = async (req: Request, res: Response) => {
     const id = parseInt(req.params['id']);
-    const postType = await db.type_Publicacion.findUnique({
+    const postType = await db.postType.findUnique({
         where: {
-            IdTypePost: id
+            PostTypeID: id
         }
     });
     res.json(postType);
@@ -31,14 +31,14 @@ export const getPostType = async (req: Request, res: Response) => {
 
 export const updatePostType = async (req: Request, res: Response) => {
     const id = parseInt(req.params['id']);
-    const {nombre, idLenguaje}: {nombre: string; idLenguaje: number} = req.body;
-    await db.type_Publicacion.update({
+    const {name, languageId}: {name: string; languageId: number} = req.body;
+    await db.postType.update({
         where:{
-            IdTypePost: id
+            PostTypeID: id
         },
         data: {
-            NomTypePost: nombre,
-            cveLanguage: idLenguaje,
+            Name: name,
+            LanguageID: languageId,
         }
     });
     res.json({
@@ -48,9 +48,9 @@ export const updatePostType = async (req: Request, res: Response) => {
 
 export const deletePostType = async (req: Request, res: Response) => {
     const id = parseInt(req.params['id']);
-    await db.type_Publicacion.delete({
+    await db.postType.delete({
         where: {
-            IdTypePost: id
+            PostTypeID: id
         }
     });
     res.json({
