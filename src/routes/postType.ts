@@ -3,10 +3,10 @@ import { createPostType, deletePostType, getPostType, getPostTypes, updatePostTy
 
 const router = Router();
 
-router.post('/post-types', createPostType);
-router.get('/post-types', getPostTypes);
-router.get('/post-types/:id', getPostType);
-router.delete('/post-types/:id', deletePostType);
-router.put('/post-types/:id', updatePostType);
+router.post('/', createPostType);
+router.get('/', getPostTypes);
+router.get('/:id', getPostType);
+router.delete('/:id', deletePostType);
+router.put('/:id', updatePostType);
 
 export default(router);

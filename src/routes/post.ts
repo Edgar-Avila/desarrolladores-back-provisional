@@ -3,10 +3,10 @@ import { createPost, deletePost, getPost, getPosts, updatePost } from "../contro
 
 const router = Router();
 
-router.post('/posts', createPost);
-router.get('/posts', getPosts);
-router.get('/posts/:id', getPost);
-router.delete('/posts/:id', deletePost);
-router.put('/posts/:id', updatePost);
+router.post('/', createPost);
+router.get('/', getPosts);
+router.get('/:id', getPost);
+router.delete('/:id', deletePost);
+router.put('/:id', updatePost);
 
 export default(router);

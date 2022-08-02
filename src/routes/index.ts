@@ -6,11 +6,11 @@ import postTypeRouter from './postType';
 import programmingLanguageRouter from './programmingLanguage';
 
 const useRoutes = (server: Express) => {
-    server.use(rootRouter);
-    server.use(postRouter);
-    server.use(userRouter);
-    server.use(postTypeRouter);
-    server.use(programmingLanguageRouter);
+    server.use('/', rootRouter);
+    server.use('/posts', postRouter);
+    server.use('/users', userRouter);
+    server.use('/post-types', postTypeRouter);
+    server.use('/programming-languages', programmingLanguageRouter);
 };
 
 export default useRoutes;
