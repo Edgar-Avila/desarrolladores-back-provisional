@@ -19,7 +19,7 @@ npm install
 1. Modificar el contenido de .env con los datos de la base de datos local, usuario y contraseña
 1. Correr
 ```properties
-npx prisma migrate dev --name init
+npx prisma db push
 npx prisma generate
 npm run dev
 ```
