@@ -8,71 +8,72 @@ datasource db {
 }
 
 model Comment {
-  CommentId   Int      @id(map: "PK__Comment__C3B4DFCA29C789AF") @default(autoincrement())
+  CommentId   Int      @id(map: "PK__Comment__C3B4DFCAD0456356") @default(autoincrement())
   Content     String   @db.VarChar(Max)
   CreatedDate DateTime @db.DateTime
   PostedImage Bytes    @db.VarBinary(1)
   UserID      Int
   PostID      Int
-  Post        Post     @relation(fields: [PostID], references: [PostID], onDelete: Cascade, onUpdate: NoAction, map: "FK__Comment__PostID__4CA06362")
-  User        User     @relation(fields: [UserID], references: [UserID], onUpdate: NoAction, map: "FK__Comment__UserID__4BAC3F29")
+  Post        Post     @relation(fields: [PostID], references: [PostID], onDelete: Cascade, onUpdate: NoAction, map: "FK__Comment__PostID__0C85DE4D")
+  User        User     @relation(fields: [UserID], references: [UserID], onUpdate: NoAction, map: "FK__Comment__UserID__0B91BA14")
 }
 
 model Post {
-  PostID          Int        @id(map: "PK__Post__AA126038496CA38B") @default(autoincrement())
+  PostID          Int        @id(map: "PK__Post__AA126038EBE68FA9") @default(autoincrement())
   PublicationDate DateTime   @db.DateTime
   Title           String?    @db.VarChar(50)
   Content         String     @db.VarChar(Max)
   UserID          Int
   PostTypeID      Int
   SharedPostID    Int?
-  PostType        PostType   @relation(fields: [PostTypeID], references: [PostTypeID], onUpdate: NoAction, map: "FK__Post__PostTypeID__4316F928")
-  Post            Post?      @relation("PostToPost", fields: [SharedPostID], references: [PostID], onDelete: NoAction, onUpdate: NoAction, map: "FK__Post__SharedPost__440B1D61")
-  User            User       @relation(fields: [UserID], references: [UserID], onUpdate: NoAction, map: "FK__Post__UserID__4222D4EF")
+  PostType        PostType   @relation(fields: [PostTypeID], references: [PostTypeID], onUpdate: NoAction, map: "FK__Post__PostTypeID__02FC7413")
+  Post            Post?      @relation("PostToPost", fields: [SharedPostID], references: [PostID], onDelete: NoAction, onUpdate: NoAction, map: "FK__Post__SharedPost__03F0984C")
+  User            User       @relation(fields: [UserID], references: [UserID], onUpdate: NoAction, map: "FK__Post__UserID__02084FDA")
   Comment         Comment[]
   other_Post      Post[]     @relation("PostToPost")
   Reaction        Reaction[]
 }
 
 model PostType {
-  PostTypeID          Int                 @id(map: "PK__PostType__AB212610D52DA5EA") @default(autoincrement())
+  PostTypeID          Int                 @id(map: "PK__PostType__AB21261008942E4A") @default(autoincrement())
   Name                String              @db.VarChar(50)
   LanguageID          Int
-  ProgrammingLanguage ProgrammingLanguage @relation(fields: [LanguageID], references: [LanguageID], onUpdate: NoAction, map: "FK__PostType__Langua__38996AB5")
+  ProgrammingLanguage ProgrammingLanguage @relation(fields: [LanguageID], references: [LanguageID], onUpdate: NoAction, map: "FK__PostType__Langua__778AC167")
   Post                Post[]
 }
 
 model ProgrammingLanguage {
-  LanguageID Int        @id(map: "PK__Programm__B938558B0CE74088") @default(autoincrement())
+  LanguageID Int        @id(map: "PK__Programm__B938558B7A2529AF") @default(autoincrement())
   Name       String     @db.VarChar(50)
   PostType   PostType[]
 }
 
 model Reaction {
-  ReactionID     Int          @id(map: "PK__Reaction__46DDF9D4007B34C0") @default(autoincrement())
+  ReactionID     Int          @id(map: "PK__Reaction__46DDF9D4056BF7E6") @default(autoincrement())
   CreatedDate    DateTime     @db.DateTime
   UserID         Int
   PostID         Int
   ReactionTypeID Int
-  Post           Post         @relation(fields: [PostID], references: [PostID], onDelete: Cascade, onUpdate: NoAction, map: "FK__Reaction__PostID__47DBAE45")
-  User           User         @relation(fields: [UserID], references: [UserID], onUpdate: NoAction, map: "FK__Reaction__Reacti__46E78A0C")
-  ReactionType   ReactionType @relation(fields: [ReactionTypeID], references: [ReactionTypeID], onUpdate: NoAction, map: "FK__Reaction__Reacti__48CFD27E")
+  Post           Post         @relation(fields: [PostID], references: [PostID], onDelete: Cascade, onUpdate: NoAction, map: "FK__Reaction__PostID__07C12930")
+  User           User         @relation(fields: [UserID], references: [UserID], onUpdate: NoAction, map: "FK__Reaction__Reacti__06CD04F7")
+  ReactionType   ReactionType @relation(fields: [ReactionTypeID], references: [ReactionTypeID], onUpdate: NoAction, map: "FK__Reaction__Reacti__08B54D69")
 }
 
 model ReactionType {
-  ReactionTypeID Int        @id(map: "PK__Reaction__01E625C0F4C029F6") @default(autoincrement())
+  ReactionTypeID Int        @id(map: "PK__Reaction__01E625C02E457A50") @default(autoincrement())
   Name           String     @db.VarChar(50)
   Icon           Bytes      @db.VarBinary(1)
   Reaction       Reaction[]
 }
 
 model User {
-  UserID      Int        @id(map: "PK__User__1788CCAC9927BD40") @default(autoincrement())
-  Username    String     @unique(map: "UQ__User__536C85E4E4324D35") @db.VarChar(100)
-  Email       String     @db.VarChar(100)
-  Password    String     @db.VarChar(50)
-  CreatedDate DateTime   @db.DateTime
-  Comment     Comment[]
-  Post        Post[]
-  Reaction    Reaction[]
+  UserID       Int        @id(map: "PK__User__1788CCAC27EA5756") @default(autoincrement())
+  Username     String     @unique(map: "UQ__User__536C85E47E60688C") @db.VarChar(100)
+  Email        String     @db.VarChar(100)
+  Password     String     @db.Char(60)
+  RefreshToken String?    @db.Char(60)
+  CreatedDate  DateTime   @db.DateTime
+  Comment      Comment[]
+  Post         Post[]
+  Reaction     Reaction[]
 }
