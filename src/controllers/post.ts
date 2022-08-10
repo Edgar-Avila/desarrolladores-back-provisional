@@ -2,17 +2,13 @@ import { Request, Response } from "express";
 import db from "../db";
 
 export const createPost = async (req: Request, res: Response) => {
-    const { userId, title, postTypeId, content, sharedPostId}:
-    {userId: number; title: string, postTypeId: number,
-     content: string, sharedPostId: number} = req.body;
+    const { userId, title, content}:
+    {userId: number; title: string, content: string} = req.body;
     await db.post.create({ 
         data: {
             UserID: userId,
             Title: title,
-            PostTypeID: postTypeId,
             Content: content,
-            SharedPostID: sharedPostId,
-            PublicationDate: new Date()
         }
     });
     res.json({
@@ -37,9 +33,8 @@ export const getPost = async (req: Request, res: Response) => {
 
 export const updatePost = async (req: Request, res: Response) => {
     const id = parseInt(req.params['id']);
-    const { userId, title, postTypeId, content, sharedPostId}:
-    {userId: number; title: string, postTypeId: number,
-     content: string, sharedPostId: number} = req.body;
+    const { userId, title, content}:
+    {userId: number; title: string, content: string} = req.body;
     await db.post.update({
         where:{
             PostID: id
@@ -47,9 +42,7 @@ export const updatePost = async (req: Request, res: Response) => {
         data:{
             UserID: userId,
             Title: title,
-            PostTypeID: postTypeId,
             Content: content,
-            SharedPostID: sharedPostId,
         }
     });
     res.json({

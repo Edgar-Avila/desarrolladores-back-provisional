@@ -7,9 +7,9 @@ import { UserPayload } from "../types/jwt";
 
 export const register = async (req: Request, res: Response) => {
     // Grab username, password and email from req.body
-    const {username, password, email} : 
-    {username: string, password: string, email: string} = req.body;
-    if(!username || !password || !email){
+    const {username, password} : 
+    {username: string, password: string} = req.body;
+    if(!username || !password){
         return res.status(400).json({
             message: 'Username and password are required'
         });
@@ -23,8 +23,6 @@ export const register = async (req: Request, res: Response) => {
             data: {
                 Username: username,
                 Password: hashed,
-                Email: email,
-                CreatedDate: new Date()
             }
         });
         res.status(201).json({'message': `New user ${username} created`});

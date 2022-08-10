@@ -2,13 +2,11 @@ import { Request, Response } from "express";
 import db from "../db";
 
 export const createUser = async (req: Request, res: Response) => {
-    const {username, email, password} = req.body;
+    const {username, password} = req.body;
     await db.user.create({
         data: {
             Username: username,
-            Email: email,
             Password: password,
-            CreatedDate: new Date()
         }
     });
     res.json({
@@ -33,14 +31,13 @@ export const getUser = async (req: Request, res: Response) => {
 
 export const updateUser = async (req: Request, res: Response) => {
     const id = parseInt(req.params['id']);
-    const {username, email, password} = req.body;
+    const {username, password} = req.body;
     await db.user.update({
         where:{
             UserID: id
         },
         data: {
             Username: username,
-            Email: email,
             Password: password,
         }
     });
