@@ -1,12 +1,12 @@
 import { Router } from "express";
-import { createUser, deleteUser, getUser, getUsers, updateUser } from "../controllers/user";
+import { deleteUser, getUser, getUsers, updateUser } from "../controllers/user";
+import { verifyJWT } from '../middleware/verifyJWT';
 
 const router = Router();
 
-router.post('/', createUser);
 router.get('/', getUsers);
 router.get('/:id', getUser);
-router.delete('/:id', deleteUser);
-router.put('/:id', updateUser);
+router.delete('/', verifyJWT, deleteUser);
+router.put('/', verifyJWT, updateUser);
 
-export default(router);
+export default (router);
