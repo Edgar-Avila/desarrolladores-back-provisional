@@ -4,6 +4,7 @@ import userRouter from './user';
 import postRouter from './post';
 import programmingLanguageRouter from './programmingLanguage';
 import authRouter from './auth';
+import likeRouter from './like';
 
 const useRoutes = (server: Express) => {
     server.use('/', rootRouter);
@@ -11,6 +12,7 @@ const useRoutes = (server: Express) => {
     server.use('/users', userRouter);
     server.use('/programming-languages', programmingLanguageRouter);
     server.use('/auth', authRouter);
+    server.use('/likes', likeRouter);
 };
 
 export default useRoutes;
