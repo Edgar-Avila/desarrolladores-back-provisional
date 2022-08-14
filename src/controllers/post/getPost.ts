@@ -13,6 +13,16 @@ export const getPost = async (req: Request, res: Response) => {
     const post = await db.post.findUnique({
         where: {
             PostID: Number(id)
+        },
+        include: {
+            ProgrammingLanguage: true,
+            Comment: true,
+            _count: {
+                select:{
+                    Like: true,
+                    Comment: true
+                }
+            }
         }
     });
 
