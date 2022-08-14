@@ -50,6 +50,7 @@ const main = async () => {
     let addedUsers: number[] = [];
     let addedLanguages: number[] = [];
     let addedPosts: number[] = [];
+    let addedComments = new Map<number, number[]>();
 
     // Delete from db
     await db.comment.deleteMany();
@@ -107,23 +108,37 @@ const main = async () => {
 
     // Likes
     for(let i=0;i<100;i++){
-        await db.like.create({
-            data: {
-                UserID: faker.helpers.arrayElement(addedUsers),
-                PostID: faker.helpers.arrayElement(addedPosts),
-            }
-        });
+        try{
+            await db.like.create({
+                data: {
+                    UserID: faker.helpers.arrayElement(addedUsers),
+                    PostID: faker.helpers.arrayElement(addedPosts),
+                }
+            });
+        }
+        catch(err){
+            i--;
+        }
     }
 
     // Comments
     for(let i=0;i<100;i++){
-        await db.comment.create({
+        let postId = faker.helpers.arrayElement(addedPosts);
+        let comments = addedComments.get(postId) || [];
+        let root = Math.floor(Math.random()*2);
+        let parentId = null;
+        if(comments.length > 0 && root == 0){
+            parentId = faker.helpers.arrayElement(comments);
+        }
+        const comment = await db.comment.create({
             data: {
                 UserID: faker.helpers.arrayElement(addedUsers),
-                PostID: faker.helpers.arrayElement(addedPosts),
-                Content: faker.hacker.phrase()
+                PostID: postId,
+                Content: faker.hacker.phrase(),
+                AnsweredID: parentId
             }
         });
+        addedComments.set(postId, [...comments, comment.CommentId]);
     }
 }
 
