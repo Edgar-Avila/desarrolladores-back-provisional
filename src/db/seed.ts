@@ -107,7 +107,7 @@ const main = async () => {
                 AnsweredID: parentId
             }
         });
-        addedComments.set(postId, [...comments, comment.CommentId]);
+        addedComments.set(postId, [...comments, comment.CommentID]);
     }
 }
 

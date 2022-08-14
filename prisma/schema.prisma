@@ -3,33 +3,33 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlserver"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model Post {
-  PostID              Int                  @id(map: "PK__Post__AA126038C6245CBE") @default(autoincrement())
+  PostID              Int                  @id @default(autoincrement())
   ImageUrl            String?              @db.VarChar(2083)
-  PublicationDate     DateTime             @default(now(), map: "DF__Post__Publicatio__26CFC035") @db.DateTime
+  PublicationDate     DateTime             @default(now())
   Title               String?              @db.VarChar(100)
-  Content             String               @db.VarChar(Max)
+  Content             String               @db.Text
   UserID              Int
   LanguageID          Int?
-  ProgrammingLanguage ProgrammingLanguage? @relation(fields: [LanguageID], references: [LanguageID], onUpdate: NoAction, map: "FK__Post__LanguageID__29AC2CE0")
-  User                User                 @relation(fields: [UserID], references: [UserID], onDelete: Cascade, onUpdate: NoAction, map: "FK__Post__UserID__28B808A7")
+  ProgrammingLanguage ProgrammingLanguage? @relation(fields: [LanguageID], references: [LanguageID], onUpdate: NoAction)
+  User                User                 @relation(fields: [UserID], references: [UserID], onDelete: Cascade, onUpdate: NoAction)
   Comment             Comment[]
   Like                Like[]
 }
 
 model ProgrammingLanguage {
-  LanguageID Int    @id(map: "PK__Programm__B938558B49179FB1") @default(autoincrement())
+  LanguageID Int    @id @default(autoincrement())
   Name       String @db.VarChar(50)
   Post       Post[]
 }
 
 model User {
-  UserID            Int       @id(map: "PK__User__1788CCACEE88BBE2") @default(autoincrement())
-  Username          String    @unique(map: "UQ__User__536C85E423D03319") @db.VarChar(100)
+  UserID            Int       @id @default(autoincrement())
+  Username          String    @unique @db.VarChar(100)
   ProfilePictureUrl String?   @db.VarChar(2083)
   Password          String    @db.Char(60)
   RefreshToken      String?   @db.Char(60)
@@ -41,20 +41,20 @@ model User {
 model Like {
   UserID Int
   PostID Int
-  Post   Post @relation(fields: [PostID], references: [PostID], onDelete: Cascade, onUpdate: NoAction, map: "FK__Like__PostID__4924D839")
-  User   User @relation(fields: [UserID], references: [UserID], onUpdate: NoAction, map: "FK__Like__UserID__4830B400")
+  Post   Post @relation(fields: [PostID], references: [PostID], onDelete: Cascade, onUpdate: NoAction)
+  User   User @relation(fields: [UserID], references: [UserID], onUpdate: NoAction)
 
-  @@id([UserID, PostID], map: "PK__Like__8D29EAAFBE2E6599")
+  @@id([UserID, PostID])
 }
 
 model Comment {
-  CommentId     Int       @id(map: "PK__Comment__C3B4DFCA3450107B") @default(autoincrement())
-  Content       String    @db.VarChar(Max)
-  AnsweredID    Int?
-  UserID        Int
-  PostID        Int
-  Comment       Comment?  @relation("CommentToComment", fields: [AnsweredID], references: [CommentId], onDelete: NoAction, onUpdate: NoAction, map: "FK__Comment__Answere__3335971A")
-  Post          Post      @relation(fields: [PostID], references: [PostID], onDelete: Cascade, onUpdate: NoAction, map: "FK__Comment__PostID__324172E1")
-  User          User      @relation(fields: [UserID], references: [UserID], onUpdate: NoAction, map: "FK__Comment__UserID__314D4EA8")
-  other_Comment Comment[] @relation("CommentToComment")
+  CommentID  Int       @id @default(autoincrement())
+  Content    String    @db.Text
+  AnsweredID Int?
+  UserID     Int
+  PostID     Int
+  Comment    Comment?  @relation("CommentToComment", fields: [AnsweredID], references: [CommentID], onDelete: Cascade, onUpdate: NoAction)
+  Post       Post      @relation(fields: [PostID], references: [PostID], onDelete: Cascade, onUpdate: NoAction)
+  User       User      @relation(fields: [UserID], references: [UserID], onUpdate: NoAction)
+  Children   Comment[] @relation("CommentToComment")
 }
