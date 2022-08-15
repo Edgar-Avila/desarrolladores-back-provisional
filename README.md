@@ -15,11 +15,11 @@ Backend provisional para la aplicación de desarrolladores.
 cd desarrolladores-back-provisional
 npm install
 ```
-1. Renombrar .env.example a .env
-1. Modificar el contenido de .env con los datos de la base de datos local, usuario y contraseña
+1. Copiar el contenido .env.example a un archivo .env
+1. Modificar el contenido de .env con los datos de la base de datos local, usuario, contraseña, token secrets y puerto
 1. Correr
 ```properties
-npx prisma db push
+npx prisma migrate dev
 npx prisma generate
 npm run dev
 ```
