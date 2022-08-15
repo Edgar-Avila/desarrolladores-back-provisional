@@ -5,6 +5,7 @@ import postRouter from './post';
 import programmingLanguageRouter from './programmingLanguage';
 import authRouter from './auth';
 import likeRouter from './like';
+import commentRouter from './comment';
 
 const useRoutes = (server: Express) => {
     server.use('/', rootRouter);
@@ -13,6 +14,7 @@ const useRoutes = (server: Express) => {
     server.use('/programming-languages', programmingLanguageRouter);
     server.use('/auth', authRouter);
     server.use('/likes', likeRouter);
+    server.use('/comments', commentRouter);
 };
 
 export default useRoutes;
