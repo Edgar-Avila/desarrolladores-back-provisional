@@ -26,6 +26,13 @@ export const getPosts = async (req: Request, res: Response) => {
         ...pagination,
         include: {
             ProgrammingLanguage: true,
+            User: {
+                select: {
+                    UserID: true,
+                    Username: true,
+                    ProfilePictureUrl: true
+                }
+            },
             Comment: true,
             _count: {
                 select:{

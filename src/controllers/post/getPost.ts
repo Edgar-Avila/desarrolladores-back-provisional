@@ -17,6 +17,13 @@ export const getPost = async (req: Request, res: Response) => {
         include: {
             ProgrammingLanguage: true,
             Comment: true,
+            User: {
+                select: {
+                    UserID: true,
+                    Username: true,
+                    ProfilePictureUrl: true
+                }
+            },
             _count: {
                 select:{
                     Like: true,
