@@ -23,7 +23,7 @@ model Post {
 
 model ProgrammingLanguage {
   LanguageID Int    @id @default(autoincrement())
-  Name       String @db.VarChar(50)
+  Name       String @db.VarChar(50) @unique
   Post       Post[]
 }
 
