@@ -57,7 +57,11 @@ export const login = async (req: Request, res: Response) => {
 
         // Send back refresh token and access token
         res.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24*60*60*1000 });
-        res.json({ accessToken });
+        res.json({ 
+            accessToken,
+            username: user.Username,
+            profilePictureUrl: user.ProfilePictureUrl,
+        });
     }
     else{
         res.sendStatus(401);
